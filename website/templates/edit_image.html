@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block app_title %}Item Info{% endblock %}
+
+{% block main_content %}
+
+<div class="container-fluid py-3" style="margin-top: 65px;">
+    
+    <center>
+        <h3>Upload image to update</h3>
+        <br>
+
+        <form action="" enctype="multipart/form-data" method="POST">
+            {{ form.csrf_token }}
+            {{ form.image }}
+            <input type="submit" value="Update Image" class="btn btn-primary">
+        </form>
+    </center>
+</div>
+
+{% endblock %}

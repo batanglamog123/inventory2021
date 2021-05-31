@@ -1,0 +1,294 @@
+{% extends "base.html" %}
+{% block app_title %}Edit Item{% endblock %}
+
+{% block main_content %}
+
+<div class="container py-3 w-75" style="margin-top: 65px;">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                {% if category == 'error' %}
+                    <div class="alert alert-danger alter-dismissable fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+                    </div>
+                {% else %}
+                    <div class="alert alert-success alter-dismissable fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form action="" method="POST">
+        <div class="mb-4">
+            <div class="alert alert-info">
+                Required *
+            </div>
+        </div>
+        <!-- <div class="mb-4">
+            <label for="formFile" class="form-label">Image *</label>
+            <input class="form-control" type="file" id="formFile" onchange="readURL(this);">
+            <img id="blah" src="#" class="rounded mx-auto d-block" height=200 />
+        </div> -->
+
+        <div class="row mb-4">
+            <div class="col-sm">
+                <label>Name *</label>
+                <input type="text" name="name" class="form-control bg-light" placeholder="Enter name here" value="{{ item.name }}" required>
+            </div>
+            <div class="col-sm">
+                <label>Model *</label>
+                <input type="text" name="model" class="form-control bg-light" placeholder="Enter name here" value="{{ item.model }}" required>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-sm">
+                <label>Brand *</label>
+                <input type="text" name="brand" class="form-control bg-light" placeholder="Enter name here" value="{{ item.brand }}" required>
+            </div>
+            <div class="col-sm">
+                <label>Serial Number *</label>
+                <input type="text" name="serial_number" class="form-control bg-light" placeholder="Enter name here" value="{{ item.serial_number }}" required>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-sm">
+                <label>Category *</label>
+                <select name="category" class="form-control" id="category" onchange="pcSpecs()">
+                    <option disabled="disabled">Choose Category</option>
+                    <option value="Computers" {% if item.category == "Computers" %} selected="selected" {% endif %}>Computers</option>
+                    <option value="Mobile" {% if item.category == "Mobile" %} selected="selected" {% endif %}>Mobile</option>
+                    <option value="Gadgets" {% if item.category == "Gadgets" %} selected="selected" {% endif %}>Gadgets</option>
+                    <option value="Components" {% if item.category == "Components" %} selected="selected" {% endif %}>Components</option>
+                    <option value="Displays" {% if item.category == "Displays" %} selected="selected" {% endif %}>Displays</option>
+                    <option value="Peripherals" {% if item.category == "Peripherals" %} selected="selected" {% endif %}>Peripherals</option>
+                    <option value="Printers" {% if item.category == "Printers" %} selected="selected" {% endif %}>Printers</option>
+                    <option value="Networking" {% if item.category == "Networking" %} selected="selected" {% endif %}>Networking</option>
+                    <option value="Accessories" {% if item.category == "Accessories" %} selected="selected" {% endif %}>Accessories</option>
+                </select>
+            </div>
+            <div class="col-sm">
+                <label>Type *</label>
+                <select name="item_type" class="form-control">
+                    <option disabled="disabled">Choose Type</option>
+                    <option value="Laptop" {% if item.item_type == "Laptop" %} selected="selected" {% endif %}>Laptop</option>
+                    <option value="Desktop" {% if item.item_type == "Desktop" %} selected="selected" {% endif %}>Desktop</option>
+                    <option value="AIO" {% if item.item_type == "AIO" %} selected="selected" {% endif %}>AIO</option>
+                    <option value="Camera" {% if item.item_type == "Camera" %} selected="selected" {% endif %}>Camera</option>
+                    <option value="Monitor" {% if item.item_type == "Monitor" %} selected="selected" {% endif %}>Monitor</option>
+                    <option value="USB drive" {% if item.item_type == "USB drive" %} selected="selected" {% endif %}>USB drive</option>
+                    <option value="etc" {% if item.item_type == "etc" %} selected="selected" {% endif %}>etc</option>
+                </select>
+            </div>
+        </div>
+
+        <!--COMPUTER SPECS-->
+        <!-- 'display: block;' if item.category = 'Computers' -->
+        {% if item.category == 'Computers' %}
+            <div id="specs" style="display: block;" class="ms-5 mb-4 w-50">
+                <i class="text-muted">Computer's Specification</i>
+
+                <dl class="row mt-2">
+                    <dd class="col-sm-3 fst-italic">CPU</dd>
+                    <dd class="col-sm-9">
+                        <input type="text" name="cpu" class="form-control cpu" placeholder="Enter here" value="{{ specs.cpu }}" required>
+                    </dd>
+                    
+                    
+                    <dd class="col-sm-3 fst-italic">GPU</dd>
+                    <dd class="col-sm-9">
+                        <input type="text" name="gpu" class="form-control gpu" placeholder="Enter here" value="{{ specs.gpu }}" required>
+                    </dd>
+                    
+                    <dd class="col-sm-3 fst-italic">RAM</dd>
+                    <dd class="col-sm-9">
+                        <input type="text" name="ram" class="form-control ram" placeholder="Enter here" value="{{ specs.ram }}" required>
+                    </dd>
+                    
+                    <dd class="col-sm-3 fst-italic">ODD</dd>
+                    <dd class="col-sm-9">
+                        <input type="text" name="odd" class="form-control odd" placeholder="Enter here" value="{{ specs.odd }}" required>
+                    </dd>
+                    
+                    <dd class="col-sm-3 fst-italic">AVR/UPS</dd>
+                    <dd class="col-sm-9">
+                        <input type="text" name="avr_ups" class="form-control avr_ups" placeholder="Enter here" value="{{ specs.avr_ups }}" required>
+                    </dd>
+                
+                </dl>
+            </div>
+        {% else %}
+            <div id="specs" style="display: none;" class="ms-5 mb-4 w-50">
+                <i class="text-muted">Computer's Specification</i>
+
+                <dl class="row mt-2">
+                    <dd class="col-sm-3 fst-italic">CPU</dd>
+                    <dd class="col-sm-9">
+                        <input type="text" name="cpu" class="form-control cpu" placeholder="Enter here" value="{{ specs.cpu }}" required>
+                    </dd>
+                    
+                    
+                    <dd class="col-sm-3 fst-italic">GPU</dd>
+                    <dd class="col-sm-9">
+                        <input type="text" name="gpu" class="form-control gpu" placeholder="Enter here" value="{{ specs.gpu }}" required>
+                    </dd>
+                    
+                    <dd class="col-sm-3 fst-italic">RAM</dd>
+                    <dd class="col-sm-9">
+                        <input type="text" name="ram" class="form-control ram" placeholder="Enter here" value="{{ specs.ram }}" required>
+                    </dd>
+                    
+                    <dd class="col-sm-3 fst-italic">ODD</dd>
+                    <dd class="col-sm-9">
+                        <input type="text" name="odd" class="form-control odd" placeholder="Enter here" value="{{ specs.odd }}" required>
+                    </dd>
+                    
+                    <dd class="col-sm-3 fst-italic">AVR/UPS</dd>
+                    <dd class="col-sm-9">
+                        <input type="text" name="avr_ups" class="form-control avr_ups" placeholder="Enter here" value="{{ specs.avr_ups }}" required>
+                    </dd>
+                
+                </dl>
+            </div>
+        {% endif %}
+        <!--END COMPUTER SPECS-->
+
+        <div class="row mb-4">
+            <div class="col-sm">
+                <label>Department / Unit Office *</label>
+                <select name="department" class="form-control">
+                    <option disabled="disabled">Choose Department/Unit Office</option>
+                    {% for dept in depts %}
+                        <option value="{{ dept.dept_name }}"  {{'selected' if dept.dept_name == item.department}}>{{ dept.dept_name }}</option>
+                    {% endfor %}
+                </select>
+                <small class="text-muted">Can't see department? <a href="/departments">Add here</a></small>
+            </div>
+            <div class="col-sm">
+                <label>Remarks</label>
+                <input type="text" name="remarks" class="form-control bg-light" placeholder="Enter name here" value="{{ item.remarks }}">
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-sm">
+                <label>Status *</label>
+                <select name="status" class="form-control" id="status" onchange="operator()">
+                    <option disabled="disabled">Choose Status</option>
+                    <option value="In Stock" {{'selected' if item.status == "In Stock"}}>In Stock</option>
+                    <option value="In Use" {{'selected' if item.status == "In Use"}}>In Use</option>
+                    <option value="Pulled Out for Repair" {{'selected' if item.status == "Pulled Out for Repair"}}>Pulled Out for Repair</option>
+                    <option value="Condemned" {{'selected' if item.status == "Condemned"}}>Condemned</option>
+                </select>
+            </div>
+            <div class="col-sm">
+                <label>Purchase Request Number *</label>
+                <input type="number" name="pr_number" class="form-control bg-light" placeholder="Enter name here" value="{{ item.pr_number }}" required>
+            </div>
+        </div>
+
+        <!--OPERATOR-->
+        {% if item.status == 'In Use' %}
+            <div id="operator" style="display: block;" class="ms-5 mb-4 w-50">
+                <i class="text-muted">Operator</i>
+
+                <dl class="row mt-2">
+                    <dd class="col-sm-4 fst-italic">Person in-charge</dd>
+                    <dd class="col-sm-8">
+                        <input type="text" name="person" class="form-control person" value="{{ operator.person }}" placeholder="Enter here">
+                    </dd>
+                    
+                    
+                    <dd class="col-sm-4 fst-italic">Purpose/operation</dd>
+                    <dd class="col-sm-8">
+                        <input type="text" name="purpose" class="form-control purpose" value="{{ operator.purpose }}" placeholder="Enter here">
+                    </dd>
+                
+                </dl>
+            </div>
+        {% else %}
+            <div id="operator" style="display: none;" class="ms-5 mb-4 w-50">
+                <i class="text-muted">Operator</i>
+
+                <dl class="row mt-2">
+                    <dd class="col-sm-4 fst-italic">Person in-charge</dd>
+                    <dd class="col-sm-8">
+                        <input type="text" name="person" class="form-control person" value="{{ operator.person }}" placeholder="Enter here">
+                    </dd>
+                    
+                    
+                    <dd class="col-sm-4 fst-italic">Purpose/operation</dd>
+                    <dd class="col-sm-8">
+                        <input type="text" name="purpose" class="form-control purpose" value="{{ operator.purpose }}" placeholder="Enter here">
+                    </dd>
+                
+                </dl>
+            </div>
+        {% endif %}
+        <!--END OPERATOR-->
+        
+        <div class="row mb-4">
+            <div class="col-sm">
+                <input type="submit" value="Update" class="btn btn-primary float-end">
+            </div>
+        </div>
+    </form>
+
+
+</div>
+
+<script>
+    function pcSpecs() {
+        var computer = document.getElementById('category')
+        var specs = document.getElementById('specs')
+
+        var cpu = document.querySelector('.cpu')
+        var gpu = document.querySelector('.gpu')
+        var ram = document.querySelector('.ram')
+        var odd = document.querySelector('.odd')
+        var avr_ups = document.querySelector('.avr_ups')
+        
+        if(computer.value == "Computers") {
+            specs.style.display = 'block';
+            cpu.required = true
+            gpu.required = true
+            ram.required = true
+            odd.required = true
+            avr_ups.required = true
+        } 
+        else {
+            specs.style.display = 'none';
+            cpu.required = false
+            gpu.required = false
+            ram.required = false
+            odd.required = false
+            avr_ups.required = false
+        }
+    }
+</script>
+
+<script>
+    function operator() {
+        var status = document.getElementById('status')
+        var operator = document.getElementById('operator')
+
+        var person = document.querySelector('.person')
+        var purpose = document.querySelector('.purpose')
+        
+        if(status.value == "In Use") {
+            operator.style.display = 'block';
+            person.required = true
+            purpose.required = true
+        } 
+        else {
+            operator.style.display = 'none';
+            person.required = false
+            purpose.required = false
+        }
+    }
+</script>
+
+{% endblock %}

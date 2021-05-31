@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='custom.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+    <link href="{{ url_for('static', filename='css/bootstrap-lightbox.min.css') }}" rel="stylesheet">
+
+    <script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>
+
+    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+
+    <script src="https://use.fontawesome.com/6374dd23c7.js"></script>
+
+
+    <style>
+      .theme_bg {
+          background-color: #0b132b;
+      }
+      
+    </style>
+
+    <title>Inventory System</title>
+</head>
+<body>
+    
+    <div class="dropdown">
+        <button class="btn theme_bg text-muted dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fa fa-bell" aria-hidden="true"></i> <span class="badge bg-secondary" id="notifCount"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="dropdownMenuButton2">
+            <li>
+              <a class="dropdown-item" href="#">Notif Message</a>
+            </li>
+        </ul>
+    </div>
+
+
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}" integrity="sha384-lpyLfhYuitXl2zRZ5Bn2fqnhNAKOAaM/0Kr9laMspuaMiZfGmfwRNFh8HlMy49eQ" crossorigin="anonymous"></script>
+
+    <script>
+        function liveCount() {
+            const countTxt = document.getElementById('notifCount');
+
+            setInterval(function() {
+                fetch('http://127.0.0.1:5000/notif_count').then(function(response) {
+                    return response.json();
+                }).then(function(data) {
+                    countTxt.textContent = data;
+                }).catch(function(error) {
+                    console.log(error);
+                })
+            }, 2000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            liveCount();
+        });
+    </script>
+
+</body>
+</html>

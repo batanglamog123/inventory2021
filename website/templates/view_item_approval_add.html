@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block app_title %}Item Info{% endblock %}
+
+{% block main_content %}
+
+<div class="container-fluid py-3 w-75" style="margin-top: 65px;">
+
+    <div class="alert bg-light">
+        <p>{{ user.name }} wants to add this item</p>
+        <a href="/item_approval_approve/{{ item.item_id }}" class="btn btn-success">Approve</a>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-4">
+            {% if item.image %}
+                <img src="{{ url_for('static', filename='item_images/'+item.image) }}" class="img-thumbnail mb-2">
+            {% else %}
+                <img src="{{ url_for('static', filename='item_images/logo.png') }}" class="img-thumbnail mb-2">
+            {% endif %}
+            <h4 class="text-primary">{{ item.name }}</h4>
+        </div>
+        <div class="col-sm-8">
+            <dl class="row">
+                <dt class="col-sm-3">Model</dt>
+                <dd class="col-sm-9">{{ item.model }}</dd>
+                
+                <dt class="col-sm-3">Brand</dt>
+                <dd class="col-sm-9">{{ item.brand }}</dd>
+                
+                <dt class="col-sm-3">Serial Number</dt>
+                <dd class="col-sm-9 text-uppercase">{{ item.serial_number }}</dd>
+                
+                <dt class="col-sm-3">Category</dt>
+                <dd class="col-sm-9">
+                    {% if item.category == "Computers" %}
+                        {{ item.category }}<br>
+                        <span class="text-muted small">CPU: {{ specs.cpu }}</span><br>
+                        <span class="text-muted small">GPU: {{ specs.gpu }}</span><br>
+                        <span class="text-muted small">RAM: {{ specs.ram }}</span><br>
+                        <span class="text-muted small">ODD: {{ specs.odd }}</span><br>
+                        <span class="text-muted small">AVR/UPS: {{ specs.avr_ups }}</span><br>
+                    {% else %}
+                        {{ item.category }}
+                    {% endif %}
+                </dd>
+                
+                <dt class="col-sm-3">Type</dt>
+                <dd class="col-sm-9">{{ item.item_type }}</dd>
+                
+                <dt class="col-sm-3">Department / Unit Office</dt>
+                <dd class="col-sm-9">{{ item.department }}</dd>
+                
+                <dt class="col-sm-3">Remarks</dt>
+                <dd class="col-sm-9">
+                    {% if item.remarks == "" %}
+                        None
+                    {% else %}
+                        {{ item.remarks }}
+                    {% endif %}
+                </dd>
+                
+                <dt class="col-sm-3">Status</dt>
+                <dd class="col-sm-9">
+                    {% if item.status == "In Use" %}
+                        {{ item.status }}<br>
+                        <span class="text-muted small">Person in-charge: {{ operator.person }}</span><br>
+                        <span class="text-muted small">Purpose: {{ operator.purpose }}</span><br>
+                    {% else %}
+                        {{ item.status }}
+                    {% endif %}
+                </dd>
+                
+                <dt class="col-sm-3">Purchase Request (PR) Number</dt>
+                <dd class="col-sm-9 text-uppercase">{{ item.pr_number }}<br><br></dd>
+
+                <dt class="col-sm-3">Created at</dt>
+                <dd class="col-sm-9 text-uppercase">{{ item.created_at }}<br><br></dd>
+              </dl>
+        </div>
+    </div>
+
+
+
+</div>
+
+{% endblock %}

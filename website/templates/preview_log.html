@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block app_title %}Client Feedbacks{% endblock %}
+
+{% block main_content %}
+
+<style>
+.sidenav {
+  height: 100%;
+  width: 250px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #0b132b;
+  overflow-x: hidden;
+  padding-top: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.sidenav a {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 15px;
+  color: #818181;
+  display: block;
+}
+
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+.main {
+  margin-left: 250px; /* Same as the width of the sidenav */
+}
+
+.sidenav .active {
+    background-color: #0b5ed7;
+    color: white;
+    border-radius: 5px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+
+table{
+  border: 1px solid #ccc;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+table th{
+  background-color: #F7F7F7;
+  color: #333;
+  font-weight: bold;
+}
+
+table th, table td{
+  padding: 5px;
+  border: 1px solid #ccc;
+}
+</style>
+
+<div class="sidenav">
+    <br><br>
+    <span style="padding: 6px 8px 6px 16px; color: #818181; font-size: 14px;">Navigation</span>
+    <a href="/accounts" class="mt-2"><i class="fa fa-user-circle" aria-hidden="true"></i>&nbsp;&nbsp;System Accounts</a>
+    <a href="/client_feedbacks"><i class="fa fa-commenting" aria-hidden="true"></i>&nbsp;&nbsp;Client Feedbacks</a>
+    <a href="/client_issues"><i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;&nbsp;Client Issues</a>
+    <a href="/system_logs" class="active"><i class="fa fa-server" aria-hidden="true"></i>&nbsp;&nbsp;System Logs</a>
+</div>
+<div class="main" style="margin-top: 65px;">
+
+    <div class="container py-3">
+
+      <div class="row">
+        <div class="col-sm-6">
+          <h5>Preview Logs for {{ date }}</h5>
+        </div>
+        <div class="col-sm-6">
+          <button type="button" class="btn btn-primary float-end mb-4" id="btnExport">Download</button>
+        </div>
+      </div>
+
+      <table id="tblCustomers">
+        <thead>
+          <tr>
+            <th colspan="4">Logs for {{ date }}</th>
+          </tr>
+          <tr>
+            <th>Index</th>
+            <th>Severity</th>
+            <th>User</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for l in logs %}
+          <tr>
+            <td>LOG-ID-{{ l.id }}</td>
+            <td>{{ l.severity }}</td>
+            <td>{{ l.user.name }}</td>
+            <td>{{ l.description }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+</div>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+<script>
+  $("body").on("click", "#btnExport", function () {
+            html2canvas($('#tblCustomers')[0], {
+                onrendered: function (canvas) {
+                    var data = canvas.toDataURL();
+                    var docDefinition = {
+                        content: [{
+                            image: data,
+                            width: 500
+                        }]
+                    };
+                    pdfMake.createPdf(docDefinition).download("logs.pdf");
+                }
+            });
+        });
+</script>
+
+
+{% endblock %}

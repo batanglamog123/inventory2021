@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block app_title %}Home{% endblock %}
+
+{% block main_content %}
+
+<div style="margin-top: 65px;" class="container-fluid">
+
+    <div class="row p-2">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    {% if category == 'error' %}
+                        <div class="alert alert-danger alter-dismissable fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-success alter-dismissable fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <div class="col-sm-10">
+            <input type="text" placeholder="Search items" class="form-control w-25" style="background-color: #d7d9e0;" id="myInput">
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-fixed table-bordered">
+            <thead class="bg-light text-muted">
+                <tr>
+                    <th colspan="7" class="text-primary text-uppercase text-center">Items to be approved</th>
+                </tr>
+                <tr>
+                    <th>Name</th>
+                    <th>Model</th>
+                    <th>Brand</th>
+                    <th>Category</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>User Action</th>
+                </tr>
+            </thead>
+            <tbody id="itemsTable" class="bg-white">
+                {% for item in items %}
+                <tr>
+                    <td>
+                        {% if item.action == "add" %}
+                            <a href="/view_item_approval_add/{{ item.id }}" style="text-decoration: none;">{{item.name}}</a>
+                        {% elif item.action == "edit" %}
+                            <a href="/view_item_approval_edit/{{ item.id }}" style="text-decoration: none;">{{item.name}}</a>
+                        {% elif item.action == "edit image" %}
+                            <a href="/view_item_approval_image/{{ item.id }}" style="text-decoration: none;">{{item.name}}</a>
+                        {% elif item.action == "delete" %}
+                            <a href="/view_item_approval_delete/{{ item.id }}" style="text-decoration: none;">{{item.name}}</a>
+                        {% endif %}
+                    </td>
+                    <td>{{item.model}}</td>
+                    <td>{{item.brand}}</td>
+                    <td>{{item.category}}</td>
+                    <td>{{item.item_type}}</td>
+                    <td>{{item.status}}</td>
+                    <td>
+                        {% if item.action == "add" %}
+                            <span class="badge bg-success text-uppercase">{{item.action}}</span>
+                        {% elif item.action == "edit" %}
+                            <span class="badge bg-primary text-uppercase">{{item.action}}</span>
+                        {% elif item.action == "edit image" %}
+                            <span class="badge bg-primary text-uppercase">{{item.action}}</span>
+                        {% elif item.action == "delete" %}
+                            <span class="badge bg-danger text-uppercase">{{item.action}}</span>
+                        {% endif %}
+                    </td>
+                    
+                </tr>
+                {% endfor %}
+                {% if not items %}
+                    <tr>
+                        <td colspan="7" class="text-center">No item added</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+    
+</div>
+
+<script src="{{ url_for('static', filename='filter_table.js') }}"></script>
+
+<!-- <script src="{{ url_for('static', filename='inventory.js') }}"></script> -->
+
+{% endblock %}

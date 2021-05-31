@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block app_title %}Accounts{% endblock %}
+
+{% block main_content %}
+
+<style>
+    .center_content{
+        max-width: 40%;
+        min-width: 100%;
+    }
+</style>
+
+<div class="container py-3" style="margin-top: 65px;">
+
+    <div class="center_content">
+        <h3>New Account</h3>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    {% if category == 'error' %}
+                    <div class="alert alert-danger alter-dismissable fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-success alter-dismissable fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form action="/new_account" method="post">
+            <label>Full Name</label>
+            <input type="text" name="name" class="form-control mb-4" placeholder="Enter full name" required>
+            <label>Username</label>
+            <input type="text" name="username" class="form-control mb-4" placeholder="Enter username" required>
+            <label>Contact Number</label>
+            <input type="number" name="number" class="form-control mb-4" placeholder="Enter contact number" required>
+            <label>Email</label>
+            <input type="email" name="email" class="form-control mb-4" placeholder="Enter email" required>
+            <input type="submit" value="Add" class="btn btn-primary">
+        </form>
+
+    </div>
+
+
+</div>
+
+{% endblock %}

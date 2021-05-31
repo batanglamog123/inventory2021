@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='custom.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+    <link href="{{ url_for('static', filename='css/bootstrap-lightbox.min.css') }}" rel="stylesheet">
+
+    <script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>
+
+    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+
+    <script src="https://use.fontawesome.com/6374dd23c7.js"></script>
+
+
+    <style>
+      .theme_bg {
+          background-color: #0b132b;
+      }
+      #nav_active {
+        border-bottom: 3px solid #0b5ed7;
+        color: white;
+      }
+
+      .star-input {
+        display: none;
+      }
+
+      .star {
+        color: gold;
+      }
+
+      .star i {
+        font-size: 30px;
+      }
+
+      .star-input:checked + .star ~ .star {
+        color: grey;
+      }
+      
+    </style>
+
+    <title>{% block app_title %}Inventory System{% endblock %}</title>
+</head>
+<body>
+    
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark theme_bg">
+        <div class="container-fluid">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+            <a class="navbar-brand text-muted" href="/">
+                <img src="{{ url_for('static', filename='logo.png') }}" height="40px">
+                Mabalacat City
+            </a>
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a class="nav-link" href="/" {% if request.url_rule.endpoint == "inventory.inventory_home" %}id="nav_active"{% endif %}>Home</a>
+                </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/profile" {% if request.url_rule.endpoint == "auth.profile" %}id="nav_active"{% endif %}>Profile</a>
+              </li>
+              {% if current_user.role == "Admin" %}
+                <li class="nav-item">
+                  <a class="nav-link" href="/accounts" {% if request.url_rule.endpoint == 'management.accounts' or request.url_rule.endpoint == 'management.client_feedbacks' %}id="nav_active"{% endif %}>Management</a>
+                </li>
+              {% endif %}
+              <li class="nav-item">
+                <a class="nav-link" href="/settings" {% if request.url_rule.endpoint == "auth.settings" %}id="nav_active"{% endif %}>Settings</a>
+              </li>
+            </ul>
+            <div class="d-flex">
+                <div class="dropdown">
+                    <button class="btn theme_bg text-muted dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                      {% if current_user.image %}
+                        <img src="{{ url_for('static', filename='item_images/'+current_user.image) }}" style="border-radius: 50%; width: 25px;">
+                      {% else %}
+                          <img src="{{ url_for('static', filename='item_images/default.png') }}" style="border-radius: 50%; width: 25px;">
+                      {% endif %}
+                      &nbsp;
+                      {{ current_user.name }}
+                      <span class="badge bg-secondary" id="adminNotifCount"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="/settings">Administrator Account</a></li>
+                        {% if current_user.role == "Admin" %}
+                        <li><a class="dropdown-item" href="/admin_notif">Admin Notification</a></li>
+                        {% endif %}
+                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">Give Feedback</a></li>
+                        <li><a class="dropdown-item" href="/settings">Personal Settings</a></li>
+                        <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                      </ul>
+                </div>
+
+                <a class="btn text-light" href="/item_notification">
+                  <i class="fa fa-bell" aria-hidden="true"></i>
+                  <span class="badge bg-secondary" id="notifCount"></span>
+                </a>
+              
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Give Feedback modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Give Feedback</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-sm-1">
+                  <i class="fa fa-commenting" aria-hidden="true"></i>
+                </div>
+                <div class="col-sm-11 text-muted">
+                  <a href="" style="text-decoration: none;" class="text-muted" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#improveModal">
+                    <b>Help Us Improve</b>
+                    <br>
+                    <small>Give feedback about your experience</small>
+                  </a>
+                </div>
+              </div>
+
+              <br>
+              
+              <div class="row">
+                <div class="col-sm-1">
+                  <i class="fa fa-info" aria-hidden="true"></i>
+                </div>
+                <div class="col-sm-11 text-muted">
+                  <a href="" style="text-decoration: none;" class="text-muted" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#reportModal">
+                    <b>Report an Issue</b>
+                    <br>
+                    <small>Report to us about a broken feature</small>
+                  </a>
+                </div>
+              </div>
+
+              <br>
+              
+              <div class="row">
+                <div class="col-sm-1">
+                  <i class="fa fa-facebook" aria-hidden="true"></i>
+                </div>
+                <div class="col-sm-11 text-muted">
+                  <a href="https://www.facebook.com/teamMISOMabalacat" style="text-decoration: none;" class="text-muted">
+                    <b>Contact Us</b>
+                    <br>
+                    <small>For other concerns you may message our facebook page</small>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Help Us Improve Modal -->
+      <div class="modal fade" id="improveModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Help Us Improve</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form action="/send_feedback" method="post" id="feedback_form">
+                <p><b>How can we improve?</b></p>
+                <label>Details</label>
+                <textarea name="details" class="form-control mb-4 bg-light" placeholder="Decribe here..." required></textarea>
+                <center>
+                  <label>Rate Us</label>
+                  <br>
+                  <input type="radio" class="star-input" name="rating" id="star-1" value="1">
+                  <label for="star-1" class="star"><i class="fa fa-star"></i></label>
+                  <input type="radio" class="star-input" name="rating" id="star-2" value="2">
+                  <label for="star-2" class="star"><i class="fa fa-star"></i></label>
+                  <input type="radio" class="star-input" name="rating" id="star-3" value="3">
+                  <label for="star-3" class="star"><i class="fa fa-star"></i></label>
+                  <input type="radio" class="star-input" name="rating" id="star-4" value="4">
+                  <label for="star-4" class="star"><i class="fa fa-star"></i></label>
+                  <input type="radio" class="star-input" name="rating" id="star-5" value="5" checked>
+                  <label for="star-5" class="star"><i class="fa fa-star"></i></label>
+                </center>
+                <br>
+                <div class="alert bg-light">
+                  Let us know if you have ideas that can help make our system better.
+                  If you need help solving a specific problem, please contact us or <a href="" style="text-decoration: none;">Report An Issue</a>
+                </div>
+                <br>
+                <div class="float-end">
+                  <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <input type="submit" class="btn btn-sm btn-primary" value="Submit">
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Report an Issue Modal -->
+      <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Report An Issue</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form action="/send_issue" method="post" id="" enctype="multipart/form-data">
+                <p><b>How can we improve?</b></p>
+                <label for="">Issue Title</label>
+                <input type="text" name="title" class="form-control bg-light mb-4" id="" placeholder="Title" required>
+                <label>Details</label>
+                <textarea name="details" class="form-control mb-4 bg-light" placeholder="Decribe here..." required></textarea>
+                <label for=""><b>Screenshot</b></label>
+                <div class="bg-light p-2 border rounded-2">
+                  <center>
+                    Add a screenshot (recommended)
+                    <br>
+                    <input type="file" name="file" />
+                  </center>
+                </div>
+                <br>
+                <div class="float-end">
+                  <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <input type="submit" class="btn btn-sm btn-primary" value="Submit">
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+    {% block main_content %}
+    {% endblock %}
+
+
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}" integrity="sha384-lpyLfhYuitXl2zRZ5Bn2fqnhNAKOAaM/0Kr9laMspuaMiZfGmfwRNFh8HlMy49eQ" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        function notifCount() {
+        const countTxt = document.getElementById('adminNotifCount');
+          setInterval(function() {
+            fetch('http://127.0.0.1:5000/admin_notif_count').then(function(response) {
+                return response.json();
+            }).then(function(data) {
+                if (data == 0) {
+                  countTxt.style.display = 'none'
+                } else {
+                  countTxt.style.display = 'inline'
+                  countTxt.textContent = data
+                }
+            }).catch(function(error) {
+                console.log(error);
+            })
+          }, 1000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+          notifCount();
+      });
+
+      // fetch('http://127.0.0.1:5000/admin_notif_count')
+      // .then(response => response.json())
+      // .then(data => console.log(data));
+
+      // setInterval(function() {
+      //   const countTxt = document.getElementById('notifCount');
+      //   axios.get('http://127.0.0.1:5000/admin_notif_count')
+      //   .then(function (response) {
+      //     // handle success
+      //     console.log(response);
+
+      //     if (response == 0) {
+      //       countTxt.style.display = 'none'
+      //     } else {
+      //       countTxt.style.display = 'block'
+      //     }
+
+      //   })
+      //   .catch(function (error) {
+      //     // handle error
+      //     console.log(error);
+      //   })
+      //   .then(function () {
+      //     // always executed
+      //   });
+      // }, 1000)
+
+    </script>
+
+    <!-- <script>
+      const form = document.querySelector('#feedback_form');
+      form.addEventListener('submit', event => {
+        const formData = new FormData(event.target);
+        const rating = formData.get('rating');
+        const details = formData.get('details');
+        console.log(rating + " - " + details);
+        event.preventDefault();
+      });
+    </script> -->
+</body>
+</html>

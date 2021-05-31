@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+{% block app_title %}New Item{% endblock %}
+
+{% block main_content %}
+
+<div class="container py-3 w-75" style="margin-top: 65px;">
+
+    <form action="" method="POST" enctype="multipart/form-data">
+        <div class="mb-4">
+            <div class="alert alert-info">
+                Required *
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <label>Image *</label>
+            <br>
+            {{ form.csrf_token }}
+            {{ form.image }}
+        </div>
+        <!-- <div class="mb-4">
+            <label for="formFile" class="form-label">Image *</label>
+            <input class="form-control" type="file" id="formFile" onchange="readURL(this);">
+            <img id="blah" src="#" class="rounded mx-auto d-block" height=200 />
+        </div> -->
+
+        <div class="row mb-4">
+            <div class="col-sm">
+                <label>Name *</label>
+                <input type="text" name="name" class="form-control bg-light" placeholder="Enter name here" required>
+            </div>
+            <div class="col-sm">
+                <label>Model *</label>
+                <input type="text" name="model" class="form-control bg-light" placeholder="Enter name here" required>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-sm">
+                <label>Brand *</label>
+                <input type="text" name="brand" class="form-control bg-light" placeholder="Enter name here" required>
+            </div>
+            <div class="col-sm">
+                <label>Serial Number *</label>
+                <input type="text" name="serial_number" class="form-control bg-light" placeholder="Enter name here" required>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-sm">
+                <label>Category *</label>
+                <select name="category" class="form-control" id="category" onchange="pcSpecs()">
+                    <option selected="true" disabled="disabled">Choose Category</option>
+                    <option value="Computers">Computers</option>
+                    <option value="Mobile">Mobile</option>
+                    <option value="Gadgets">Gadgets</option>
+                    <option value="Components">Components</option>
+                    <option value="Displays">Displays</option>
+                    <option value="Peripherals">Peripherals</option>
+                    <option value="Printers">Printers</option>
+                    <option value="Networking">Networking</option>
+                    <option value="Accessories">Accessories</option>
+                </select>
+            </div>
+            <div class="col-sm">
+                <label>Type *</label>
+                <select name="item_type" class="form-control">
+                    <option selected="true" disabled="disabled">Choose Type</option>
+                    <option value="Laptop">Laptop</option>
+                    <option value="Desktop">Desktop</option>
+                    <option value="AIO">AIO</option>
+                    <option value="Camera">Camera</option>
+                    <option value="Monitor">Monitor</option>
+                    <option value="USB drive">USB drive</option>
+                    <option value="etc">etc</option>
+                </select>
+            </div>
+        </div>
+
+        <!--COMPUTER SPECS-->
+        <div id="specs" style="display: none;" class="ms-5 mb-4 w-50">
+            <i class="text-muted">Computer's Specification</i>
+
+            <dl class="row mt-2">
+                <dd class="col-sm-3 fst-italic">CPU</dd>
+                <dd class="col-sm-9">
+                    <input type="text" name="cpu" class="form-control cpu" placeholder="Enter here">
+                </dd>
+                
+                
+                <dd class="col-sm-3 fst-italic">GPU</dd>
+                <dd class="col-sm-9">
+                    <input type="text" name="gpu" class="form-control gpu" placeholder="Enter here">
+                </dd>
+                
+                <dd class="col-sm-3 fst-italic">RAM</dd>
+                <dd class="col-sm-9">
+                    <input type="text" name="ram" class="form-control ram" placeholder="Enter here">
+                </dd>
+                
+                <dd class="col-sm-3 fst-italic">ODD</dd>
+                <dd class="col-sm-9">
+                    <input type="text" name="odd" class="form-control odd" placeholder="Enter here">
+                </dd>
+                
+                <dd class="col-sm-3 fst-italic">AVR/UPS</dd>
+                <dd class="col-sm-9">
+                    <input type="text" name="avr_ups" class="form-control avr_ups" placeholder="Enter here">
+                </dd>
+            
+              </dl>
+        </div>
+        <!--END COMPUTER SPECS-->
+
+        <div class="row mb-4">
+            <div class="col-sm">
+                <label>Department/Unit Office *</label>
+                <!-- <input type="text" name="department" class="form-control bg-light" placeholder="Enter name here" required> -->
+                <select name="department" class="form-control">
+                    <option selected="true" disabled="disabled">Choose Department/Unit Office</option>
+                    {% for dept in depts %}
+                        <option value="{{ dept.dept_name }}">{{ dept.dept_name }}</option>
+                    {% endfor %}
+                </select>
+                <small class="text-muted">Can't see department? <a href="/departments">Add here</a></small>
+            </div>
+            <div class="col-sm">
+                <label>Remarks</label>
+                <input type="text" name="remarks" class="form-control bg-light" placeholder="Enter name here">
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-sm">
+                <label>Status *</label>
+                <select name="status" class="form-control" id="status" onchange="operator()">
+                    <option selected="true" disabled="disabled">Choose Status</option>
+                    <option value="In Stock">In Stock</option>
+                    <option value="In Use">In Use</option>
+                    <option value="Pulled Out for Repair">Pulled Out for Repair</option>
+                    <option value="Condemned">Condemned</option>
+                </select>
+            </div>
+            <div class="col-sm">
+                <label>Purchase Request Number *</label>
+                <input type="number" name="pr_number" class="form-control bg-light" placeholder="Enter name here" required>
+            </div>
+        </div>
+
+        <!--OPERATOR-->
+        <div id="operator" style="display: none;" class="ms-5 mb-4 w-50">
+            <i class="text-muted">Operator</i>
+
+            <dl class="row mt-2">
+                <dd class="col-sm-4 fst-italic">Person in-charge</dd>
+                <dd class="col-sm-8">
+                    <input type="text" name="person" class="form-control person" placeholder="Enter here">
+                </dd>
+                
+                
+                <dd class="col-sm-4 fst-italic">Purpose/operation</dd>
+                <dd class="col-sm-8">
+                    <input type="text" name="purpose" class="form-control purpose" placeholder="Enter here">
+                </dd>
+            
+              </dl>
+        </div>
+        <!--END OPERATOR-->
+        
+        <div class="row mb-4">
+            <div class="col-sm">
+                {% if current_user.activated == 1 %}
+                    <input type="submit" value="Add" class="btn btn-primary float-end">
+                {% else %}
+                    <button class="btn btn-primary float-end disabled">Add</button>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+    
+</div>
+
+<script>
+    function pcSpecs() {
+        var computer = document.getElementById('category')
+        var specs = document.getElementById('specs')
+
+        var cpu = document.querySelector('.cpu')
+        var gpu = document.querySelector('.gpu')
+        var ram = document.querySelector('.ram')
+        var odd = document.querySelector('.odd')
+        var avr_ups = document.querySelector('.avr_ups')
+        
+        if(computer.value == "Computers") {
+            specs.style.display = 'block';
+            cpu.required = true
+            gpu.required = true
+            ram.required = true
+            odd.required = true
+            avr_ups.required = true
+        } else {
+            specs.style.display = 'none';
+            cpu.required = false
+            gpu.required = false
+            ram.required = false
+            odd.required = false
+            avr_ups.required = false
+        }
+    }
+</script>
+
+<script>
+    function operator() {
+        var status = document.getElementById('status')
+        var operator = document.getElementById('operator')
+
+        var person = document.querySelector('.person')
+        var purpose = document.querySelector('.purpose')
+        
+        if(status.value == "In Use") {
+            operator.style.display = 'block';
+            person.required = true
+            purpose.required = true
+        } else {
+            operator.style.display = 'none';
+            person.required = false
+            purpose.required = false
+        }
+    }
+</script>
+
+{% endblock %}

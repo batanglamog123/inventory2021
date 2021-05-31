@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block app_title %}New Item{% endblock %}
+
+{% block main_content %}
+
+<div class="container py-3 w-50" style="margin-top: 65px;">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    {% if category == 'error' %}
+                        <div class="alert alert-danger alter-dismissable fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-success alter-dismissable fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+    <form action="" method="post" class="mb-4">
+        <div class="row">
+            <div class="col-sm-10">
+                <input type="text" name="name" class="form-control" placeholder="Department/Unit Office name" required>
+            </div>
+            <div class="col-sm-2">
+                <input type="submit" value="Add" class="btn btn-success w-100">
+            </div>
+        </div>
+    </form>
+
+    <table class="table table-bordered">
+        <thead class="bg-light text-muted">
+            <tr>
+                <th>Department/Unit Office</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dept in depts %}
+                <tr>
+                    <td>{{ dept.dept_name }}</td>
+                    <td>
+                        <a href="/edit_image/{{ dept.id }}" class="btn btn-sm btn-primary">
+                            <i class="fa fa-edit" aria-hidden="true"></i>
+                        </a>
+                        <a href="/edit_image/{{ dept.id }}" class="btn btn-sm btn-danger">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+    
+</div>
+
+
+{% endblock %}

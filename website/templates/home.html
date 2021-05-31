@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block app_title %}Home{% endblock %}
+
+{% block main_content %}
+
+<div style="margin-top: 65px;" class="container-fluid">
+
+    <div class="row p-2">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    {% if category == 'error' %}
+                        <div class="alert alert-danger alter-dismissable fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-success alter-dismissable fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <div class="col-sm-8">
+            <input type="text" placeholder="Search items" class="form-control w-50" style="background-color: #d7d9e0;" id="myInput">
+        </div>
+        <div class="col-sm-4">
+            <div class="float-end">
+                {% if current_user.role == "Admin" %}
+                    <a href="/item_approval" class="btn btn-secondary">
+                        Item Approval
+                        <span class="badge bg-white text-dark" id="approvalCount" style="display: none;"></span>
+                    </a>
+                {% endif %}
+                {% if current_user.activated == 1 %}
+                    <a href="/new_item" class="btn btn-primary">
+                        <i class="fa fa-plus" aria-hidden="true"></i> New Item
+                    </a>
+                {% else %}
+                    <a href="#" class="btn btn-primary disabled">
+                        <i class="fa fa-plus" aria-hidden="true"></i> New Item
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-fixed table-bordered">
+            <thead class="bg-light text-muted">
+                <tr>
+                    <th>Name</th>
+                    <th>Model</th>
+                    <th>Brand</th>
+                    <th>Category</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="itemsTable" class="bg-white">
+                {% for item in items %}
+                <tr>
+                    <td><a href="/view_item/{{ item.id }}" style="text-decoration: none;">{{item.name}}</a></td>
+                    <td>{{item.model}}</td>
+                    <td>{{item.brand}}</td>
+                    <td>{{item.category}}</td>
+                    <td>{{item.item_type}}</td>
+                    <td>{{item.status}}</td>
+                    
+                </tr>
+                {% endfor %}
+                {% if not items %}
+                    <td colspan="6" class="text-center">No items added</td>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+    
+</div>
+
+<script src="{{ url_for('static', filename='filter_table.js') }}"></script>
+
+<!-- <script src="{{ url_for('static', filename='inventory.js') }}"></script> -->
+
+<script>
+    function approval() {
+        setInterval(() => {
+            const aCount = document.getElementById('approvalCount')
+            fetch('http://127.0.0.1:5000/approval_count').then(function(response) {
+                return response.json();
+            }).then(function(data) {
+                if (data == 0) {
+                    aCount.style.display = 'none'
+                } else {
+                    aCount.style.display = 'inline'
+                    aCount.textContent = data
+                }
+            }).catch(function(error) {
+                console.log(error);
+            })
+        }, 1000);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        approval()
+    })
+</script>
+
+{% endblock %}

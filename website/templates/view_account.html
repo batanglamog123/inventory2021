@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block app_title %}Account Info{% endblock %}
+
+{% block main_content %}
+
+<div class="container py-3" style="margin-top: 65px;">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                {% if category == 'error' %}
+                    <div class="alert alert-danger alter-dismissable fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+                    </div>
+                {% else %}
+                    <div class="alert alert-success alter-dismissable fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="row">
+        <div class="col-sm-3">
+            {% if user.image %}
+                <img src="{{ url_for('static', filename='profile_pics/'+user.image) }}" style="border-radius: 50%; width: 180px;">
+            {% else %}
+                <img src="{{ url_for('static', filename='profile_pics/default.png') }}" style="border-radius: 50%; width: 180px;">
+            {% endif %}
+        </div>
+        <div class="col-sm-9">
+            <h3 class="text-primary">{{ user.name }}</h3>
+            
+            <div class="row">
+                <div class="col-sm-3">
+                    <small class="text-muted">Username</small>
+                    <p>{{ user.username }}</p>
+                </div>
+                <div class="col-sm-3">
+                    <small class="text-muted">Email</small>
+                    <p>{{ user.email }}</p>
+                </div>
+                <div class="col-sm-3">
+                    <small class="text-muted">Number</small>
+                    <p>{{ user.number }}</p>
+                </div>
+                <div class="col-sm-3">
+                    <small class="text-muted">Activation</small>
+                    {% if user.activated == 0 %}
+                        <p>Deactivated<br><a href="/user_activate/{{ user.id }}" onclick="return confirm('Activate user?')">Activate here</a></p>
+                    {% else %}
+                        <p>Activated<br><a href="/user_deactivate/{{ user.id }}" onclick="return confirm('Deactivate user?')">Remove activation here</a></p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <i>Date created: {{ user.created_at }}</i><br><br>
+
+            <a href="/reset_password/{{ user.id }}" class="btn btn-sm btn-secondary" onclick="return confirm('Reset Password?')">Reset Password</a>
+            <a href="/delete_account/{{ user.id }}" class="btn btn-sm btn-outline-secondary" onclick="return confirm('Delete user?')">Delete User</a>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

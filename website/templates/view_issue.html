@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block app_title %}Client Issues{% endblock %}
+
+{% block main_content %}
+
+<div class="container py-3 w-75" style="margin-top: 65px;">
+    <h3>Issue Info</h3>
+    <small class="text-muted">Issue Title</small>
+    <p>{{ issue.title }}</p>
+    <small class="text-muted">Sender</small>
+    <p><a href="/view_account/{{issue.user_id}}" style="text-decoration: none;">@{{ issue.user.name }}</a></p>
+    <small class="text-muted">Decription</small>
+    <p>{{ issue.details }}</p>
+    {% if issue.screen_shot %}
+        <img src="{{ url_for('static', filename='item_images/'+issue.screen_shot) }}" class="rounded w-50">
+    {% endif %}
+</div>
+
+
+{% endblock %}

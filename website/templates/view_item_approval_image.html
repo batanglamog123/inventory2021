@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block app_title %}Item Info{% endblock %}
+
+{% block main_content %}
+
+<div class="container-fluid py-3 w-75" style="margin-top: 65px;">
+
+    <div class="alert bg-light">
+        <p>{{ user.name }} wants to edit item's image</p>
+        <a href="/image_approval?id={{ item.id }}&&a_id={{ itemApproval.id }}" class="btn btn-primary btn-sm">Approve</a>
+    </div>
+
+    <h5 class="text-primary">{{ item.name }}</h5>
+    <div class="d-flex justify-content-center">
+        <div class="row w-75">
+            <div class="col-sm-6">
+                Old
+                <img src="{{ url_for('static', filename='item_images/'+item.image) }}" class="img-thumbnail mb-2">
+            </div>
+            <div class="col-sm-6">
+                New
+                <img src="{{ url_for('static', filename='item_images/'+itemApproval.image) }}" class="img-thumbnail mb-2">
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

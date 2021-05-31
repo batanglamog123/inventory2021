@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% block app_title %}Settings{% endblock %}
+
+{% block main_content %}
+
+<style>
+    .topnav {
+    overflow: hidden;
+    border-bottom: 0.5px solid grey;
+    }
+
+    .topnav a {
+    float: left;
+    display: block;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    border-bottom: 3px solid transparent;
+    }
+
+    .topnav a:hover {
+    border-bottom: 3px solid #0b5ed7;
+    }
+
+    .topnav a.active {
+    border-bottom: 3px solid #0b5ed7;
+    color: #0b5ed7;
+    }
+
+    .circular--portrait {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+    border-radius: 50%;
+    background-color: grey;
+    }
+
+    .circular--portrait img {
+    width: 100%;
+    height: auto;
+    }
+</style>
+
+<div class="container py-3 w-75" style="margin-top: 65px;">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                {% if category == 'error' %}
+                <div class="alert alert-danger alter-dismissable fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+                </div>
+                {% else %}
+                <div class="alert alert-success alter-dismissable fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+                </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <h3>Settings</h3>
+
+    <div class="topnav nav nav-tabs" id="nav-tab" role="tablist">
+        <a class="active text-muted" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Account</a>
+        <a class="text-muted" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Security</a>
+    </div>
+
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+            <div class="row" style="margin-top: 45px;">
+                <div class="col-sm-6">
+                    <h5>Account Profile</h5>
+                    <p class="text-muted">Upload or remove your profile photo</p>
+                </div>
+                <div class="col-sm-6">
+                    <center>
+                        {% if account.image %}
+                            <div class="circular--portrait">
+                                <img src="{{ url_for('static', filename='item_images/'+account.image) }}">
+                            </div>
+                        {% else %}
+                            <div class="circular--portrait">
+                                <img src="{{ url_for('static', filename='profile_pics/default.png') }}">
+                            </div>
+                        {% endif %}
+                        <br><br>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#picmodal">Update Picture</button>
+                    </center>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 40px;">
+                <div class="col-sm-6">
+                    <h5>Account Profile</h5>
+                    <p class="text-muted">
+                        Changing this information will also affect your name and appearance on all other part of the system
+                    </p>
+                </div>
+                <div class="col-sm-6">
+                    <form action="/account_profile" method="post">
+                        <label>Name</label>
+                        <input type="text" name="name" class="form-control mb-4 bg-light" value="{{ account.name }}" required>
+                        <label>Username</label>
+                        <input type="text" name="username" class="form-control mb-4 bg-light" value="{{ account.username }}" required>
+                        <label>Email</label>
+                        <input type="email" name="email" class="form-control mb-4 bg-light" value="{{ account.email }}" required>
+                        <label>Phone Number</label>
+                        <input type="number" name="number" class="form-control mb-4 bg-light" value="{{ account.number }}" required>
+                        <input type="submit" value="Save Changes" class="btn btn-primary">
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+            <div class="row" style="margin-top: 40px;">
+                <div class="col-sm-6">
+                    <h5>Change Password</h5>
+                    <p class="text-muted">
+                        Passwords must be:
+                        <ul>
+                            <li>At least 8 or more characters in length</li>
+                            <li>Not the same as your previous password</li>
+                        </ul>
+                    </p>
+                </div>
+                <div class="col-sm-6">
+                    <form action="/update_password" method="post">
+                        <label>Current Password</label>
+                        <input type="password" name="current" class="form-control mb-4 bg-light" required>
+                        <label>New Password</label>
+                        <input type="password" name="new" class="form-control mb-4 bg-light" required>
+                        <label>Confirm Password</label>
+                        <input type="password" name="confirm" class="form-control mb-4 bg-light" required>
+                        <input type="submit" value="Save Changes" class="btn btn-primary">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="picmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Choose a picture</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="/profile_image" method="post" enctype="multipart/form-data">
+                        {{ form.csrf_token }}
+                        {{ form.image }}
+                        <input type="submit" value="Update" class="btn btn-primary float-end">
+                    </form>
+                    <br>
+                    <a href="/remove_profile_image" class="btn btn-secondary float-end">Remove Image</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

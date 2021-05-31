@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% block app_title %}Item Info{% endblock %}
+
+{% block main_content %}
+
+<div class="container-fluid py-3 w-75" style="margin-top: 65px;">
+
+    <div class="alert bg-light">
+        <p>{{ user.name }} wants to edit this item</p>
+        <a href="/approve_edit?id={{ item.id }}&&a_id={{ itemApproval.id }}" class="btn btn-primary btn-sm">Approve</a>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-4">
+            {% if item.image %}
+                <img src="{{ url_for('static', filename='item_images/'+item.image) }}" class="img-thumbnail mb-2">
+            {% else %}
+                <img src="{{ url_for('static', filename='item_images/logo.png') }}" class="img-thumbnail mb-2">
+            {% endif %}
+            <h4 class="text-primary">{{ item.name }}</h4>
+        </div>
+        <div class="col-sm-8">
+            <dl class="row">
+                <dt class="col-sm-3">Name</dt>
+                <dd class="col-sm-9">
+                    {% if item.name == itemApproval.name %}
+                        {{ item.name }}
+                    {% else %}
+                        {{ item.name }} &#x2192; <span class="text-primary">{{ itemApproval.name }}</span>
+                    {% endif %}
+                </dd>
+
+                <dt class="col-sm-3">Model</dt>
+                <dd class="col-sm-9">
+                    {% if item.model == itemApproval.model %}
+                        {{ item.model }}
+                    {% else %}
+                        {{ item.model }} &#x2192; <span class="text-primary">{{ itemApproval.model }}</span>
+                    {% endif %}
+                </dd>
+                
+                <dt class="col-sm-3">Brand</dt>
+                <dd class="col-sm-9">
+                    {% if item.brand == itemApproval.brand %}
+                        {{ item.brand }}
+                    {% else %}
+                        {{ item.brand }} &#x2192; <span class="text-primary">{{ itemApproval.brand }}</span>
+                    {% endif %}
+                </dd>
+                
+                <dt class="col-sm-3">Serial Number</dt>
+                <dd class="col-sm-9 text-uppercase">
+                    {% if item.serial_number == itemApproval.serial_number %}
+                        {{ item.serial_number }}
+                    {% else %}
+                        {{ item.serial_number }} &#x2192; <span class="text-primary">{{ itemApproval.serial_number }}</span>
+                    {% endif %}</dd>
+                
+                <dt class="col-sm-3">Category</dt>
+                <dd class="col-sm-9">
+                    {% if item.category == "Computers" or itemApproval.category == "Computers"%}
+                        {% if item.category == itemApproval.category %}
+                            {{ item.category }}
+                        {% else %}
+                            {{ item.category }} &#x2192; <span class="text-primary">{{ itemApproval.category }}</span>
+                        {% endif %}
+                        <br>
+                        <span class="text-muted small">
+                            CPU: 
+                            {% if specs.cpu == specsApproval.cpu %}
+                                {{ specs.cpu }}
+                            {% else %}
+                                {{ specs.cpu }} &#x2192; <span class="text-primary">{{ specsApproval.cpu }}</span>
+                            {% endif %}
+                        </span><br>
+                        <span class="text-muted small">
+                            GPU: 
+                            {% if specs.gpu == specsApproval.gpu %}
+                                {{ specs.gpu }}
+                            {% else %}
+                                {{ specs.gpu }} &#x2192; <span class="text-primary">{{ specsApproval.gpu }}</span>
+                            {% endif %}</span><br>
+                        <span class="text-muted small">
+                            RAM: 
+                            {% if specs.ram == specsApproval.ram %}
+                                {{ specs.ram }}
+                            {% else %}
+                                {{ specs.ram }} &#x2192; <span class="text-primary">{{ specsApproval.ram }}</span>
+                            {% endif %}</span><br>
+                        <span class="text-muted small">
+                            ODD: 
+                            {% if specs.odd == specsApproval.odd %}
+                                {{ specs.odd }}
+                            {% else %}
+                                {{ specs.odd }} &#x2192; <span class="text-primary">{{ specsApproval.odd }}</span>
+                            {% endif %}</span><br>
+                        <span class="text-muted small">
+                            AVR/UPS: 
+                            {% if specs.avr_ups == specsApproval.avr_ups %}
+                                {{ specs.avr_ups }}
+                            {% else %}
+                                {{ specs.avr_ups }} &#x2192; <span class="text-primary">{{ specsApproval.avr_ups }}</span>
+                            {% endif %}</span><br>
+                    {% else %}
+                        {% if item.category == itemApproval.category %}
+                            {{ item.category }}
+                        {% else %}
+                            {{ item.category }} &#x2192; <span class="text-primary">{{ itemApproval.category }}</span>
+                        {% endif %}
+                    {% endif %}
+                </dd>
+                
+                <dt class="col-sm-3">Type</dt>
+                <dd class="col-sm-9">
+                    {% if item.item_type == itemApproval.item_type %}
+                        {{ item.item_type }}
+                    {% else %}
+                        {{ item.item_type }} &#x2192; <span class="text-primary">{{ itemApproval.item_type }}</span>
+                    {% endif %}
+                </dd>
+                
+                <dt class="col-sm-3">Department / Unit Office</dt>
+                <dd class="col-sm-9">
+                    {% if item.department == itemApproval.department %}
+                        {{ item.department }}
+                    {% else %}
+                        {{ item.department }} &#x2192; <span class="text-primary">{{ itemApproval.department }}</span>
+                    {% endif %}
+                </dd>
+                
+                <dt class="col-sm-3">Remarks</dt>
+                <dd class="col-sm-9">
+                    {% if item.remarks == itemApproval.remarks %}
+                        {{ item.remarks }}
+                    {% else %}
+                        {{ item.remarks }} &#x2192; <span class="text-primary">{{ itemApproval.remarks }}</span>
+                    {% endif %}
+                </dd>
+                
+                <dt class="col-sm-3">Status</dt>
+                <dd class="col-sm-9">
+                    {% if item.status == "In Use"  or itemApproval.status == "In Use"%}
+                        {% if item.status == itemApproval.status %}
+                            {{ item.status }}
+                        {% else %}
+                            {{ item.status }} &#x2192; <span class="text-primary">{{ itemApproval.status }}</span>
+                        {% endif %}
+                        <br>
+                        <span class="text-muted small">Person in-charge: {{ operator.person }}</span><br>
+                        <span class="text-muted small">Purpose: {{ operator.purpose }}</span><br>
+                    {% else %}
+                        {% if item.status == itemApproval.status %}
+                            {{ item.status }}
+                        {% else %}
+                            {{ item.status }} &#x2192; <span class="text-primary">{{ itemApproval.status }}</span>
+                        {% endif %}
+                    {% endif %}
+                </dd>
+                
+                <dt class="col-sm-3">Purchase Request (PR) Number</dt>
+                <dd class="col-sm-9 text-uppercase">
+                    {% if item.pr_number == itemApproval.pr_number %}
+                        {{ item.pr_number }}
+                    {% else %}
+                        {{ item.pr_number }} &#x2192; <span class="text-primary">{{ itemApproval.pr_number }}</span>
+                    {% endif %}
+                </dd>
+
+                <dt class="col-sm-3">Updated at</dt>
+                <dd class="col-sm-9 text-uppercase">{{ itemApproval.updated_at }}<br><br></dd>
+              </dl>
+        </div>
+    </div>
+
+
+
+</div>
+
+{% endblock %}

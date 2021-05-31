@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block app_title %}Admin Notification{% endblock %}
+
+{% block main_content %}
+
+<div class="container py-3 w-50" style="margin-top: 65px;">
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            {% if category == 'error' %}
+            <div class="alert alert-danger alter-dismissable fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+            </div>
+            {% else %}
+            <div class="alert alert-success alter-dismissable fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+            </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+    <h3>Admin Notification</h3>
+
+    <ul class="list-group">
+        {% for notif in notifs %}
+            <li class="list-group-item">
+                <p class="text-primary">{{ notif.content }}</p>
+                <span class="small">{{ notif.date }}</span>
+                <i class="text-muted small">
+                    {% if notif.read == 0 %}
+                        Unread
+                    {% endif %}
+                </i>
+                <br><br>
+                <a href="/view_admin_notif/{{ notif.id }}" class="btn btn-sm btn-outline-secondary">View</a>
+                <!-- {% if notif.item_id == None %}
+                <a class="btn btn-sm btn-secondary disabled">Item was deleted</a>
+                {% else %}
+                    <a href="/view_admin_notif/{{ notif.id }}" class="btn btn-sm btn-outline-secondary">View</a>
+                {% endif %} -->
+            </li>
+        {% endfor %}
+    </ul>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block app_title %}Profile{% endblock %}
+
+{% block main_content %}
+
+<div class="container py-3" style="margin-top: 65px;">
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            {% if category == 'error' %}
+            <div class="alert alert-danger alter-dismissable fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+            </div>
+            {% else %}
+            <div class="alert alert-success alter-dismissable fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+            </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<center>
+    <h3>Local Government Unit - Management Information Systems Office</h3>
+    <p>System template for LGU-Mabalact Web Application Systems</p>
+</center>
+
+</div>
+
+{% endblock %}

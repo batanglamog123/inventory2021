@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block app_title %}Client Issues{% endblock %}
+
+{% block main_content %}
+
+<style>
+.sidenav {
+  height: 100%;
+  width: 250px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #0b132b;
+  overflow-x: hidden;
+  padding-top: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.sidenav a {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 15px;
+  color: #818181;
+  display: block;
+}
+
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+.main {
+  margin-left: 250px; /* Same as the width of the sidenav */
+}
+
+.sidenav .active {
+    background-color: #0b5ed7;
+    color: white;
+    border-radius: 5px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+</style>
+
+<div class="sidenav">
+    <br><br>
+    <span style="padding: 6px 8px 6px 16px; color: #818181; font-size: 14px;">Navigation</span>
+    <a href="/accounts" class="mt-2"><i class="fa fa-user-circle" aria-hidden="true"></i>&nbsp;&nbsp;System Accounts</a>
+    <a href="/client_feedbacks"><i class="fa fa-commenting" aria-hidden="true"></i>&nbsp;&nbsp;Client Feedbacks</a>
+    <a href="/client_issues" class="active"><i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;&nbsp;Client Issues</a>
+    <a href="/system_logs"><i class="fa fa-server" aria-hidden="true"></i>&nbsp;&nbsp;System Logs</a>
+</div>
+<div class="main" style="margin-top: 65px;">
+
+    <div class="row p-2">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    {% if category == 'error' %}
+                    <div class="alert alert-danger m-2 alter-dismissable fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-success m-2 alter-dismissable fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <div class="col-sm-10">
+            <input type="text" placeholder="Search" class="form-control w-25" style="background-color: #d7d9e0;" id="myInput">
+        </div>
+    </div>
+
+    <table class="table table-bordered">
+        <thead class="bg-light text-muted">
+            <tr>
+                <th>Index</th>
+                <th>Sender</th>
+                <th>Issue Title</th>
+                <th>Date Issued</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="itemsTable">
+          {% for i in issues %}
+          <tr>
+            <td>F-ID-{{ i.id }}</td>
+            <td><a href="/view_account/{{i.user_id}}" style="text-decoration: none;">@{{ i.user.name }}</a></td>
+            <td>{{i.title}}</td>
+            <td>{{ i.date.strftime('%b %d, %Y') }}</td>
+            <td>
+                <a href="/view_issue/{{i.id}}" class="btn btn-sm btn-primary">View</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+<script>
+    $(document).ready(function(){
+      $("#myInput").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#itemsTable tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+    });
+</script>
+
+{% endblock %}
