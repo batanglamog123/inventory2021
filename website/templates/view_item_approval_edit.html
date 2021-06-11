@@ -8,6 +8,7 @@
     <div class="alert bg-light">
         <p>{{ user.name }} wants to edit this item</p>
         <a href="/approve_edit?id={{ item.id }}&&a_id={{ itemApproval.id }}" class="btn btn-primary btn-sm">Approve</a>
+        <a href="/disapprove_edit?id={{ item.id }}&&a_id={{ itemApproval.id }}" class="btn btn-secondary btn-sm">Disapprove</a>
     </div>
 
     <div class="row">

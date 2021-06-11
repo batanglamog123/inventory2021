@@ -103,7 +103,7 @@ def approve_edit():
         db.session.add(notif)
         db.session.commit()
 
-        log = Log(severity='Permission', description=current_user.name+' approved item update', user_id=current_user.id)
+        log = Log(severity='Permission', description=current_user.name+' approved item update - ' + item.name, user_id=current_user.id)
         db.session.add(log)
         db.session.commit()
 
@@ -135,7 +135,30 @@ def approve_edit():
                 db.session.add(operator_new)
                 db.session.commit()
 
-        flash("Item updates approved!", category='success')
+        flash("Item updates was approved!", category='success')
+        return redirect(url_for('item_approval.item_approval'))
+    else :
+        flash("Item might be deleted", category='error')
+        return redirect(url_for('item_approval.item_approval'))
+
+@approval.route('/disapprove_edit')
+@login_required
+def disapprove_edit():
+    itemId = request.args.get('id')
+    approvalId = request.args.get('a_id')
+
+    item = Item.query.get(itemId)
+    item_approval = ItemApproval.query.get(approvalId)
+
+    if item:
+        db.session.delete(item_approval)
+        db.session.commit()
+
+        log = Log(severity='Permission', description=current_user.name+' disapproved item update - ' + item.name, user_id=current_user.id)
+        db.session.add(log)
+        db.session.commit()
+
+        flash("Item updates was disapproved!", category='success')
         return redirect(url_for('item_approval.item_approval'))
     else :
         flash("Item might be deleted", category='error')
