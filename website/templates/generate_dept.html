@@ -53,7 +53,7 @@
                     <th>Status</th>
                 </tr>
             </thead>
-            <tbody id="myTable" class="bg-white">
+            <tbody id="itemsTable" class="bg-white">
                 {% for item in items %}
                 <tr class="content">
                     <td><a href="/view_item/{{ item.id }}" style="text-decoration: none;">{{item.name}}</a></td>
@@ -74,6 +74,8 @@
     </div>
     
 </div>
+
+<script src="{{ url_for('static', filename='filter_table.js') }}"></script>
 
 <script>
     function filterText()
