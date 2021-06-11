@@ -33,7 +33,7 @@
                         Item Approval
                         <span class="badge bg-white text-dark" id="approvalCount" style="display: none;"></span>
                     </a>
-                    <button class="btn btn-success">
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#report_modal">
                         Generate Report
                     </button>
                 {% endif %}
@@ -49,6 +49,27 @@
                     </a>
                 {% endif %}
             </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="report_modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">Generate Report</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li><a href="">By department/unit office</a></li>
+                    <li><a href="">In stock items</a></li>
+                    <li><a href="">Pulled out of rapair items</a></li>
+                    <li><a href="">In use items</a></li>
+                    <li><a href="">Condemned items</a></li>
+                </ul>
+            </div>
+        </div>
         </div>
     </div>
 
