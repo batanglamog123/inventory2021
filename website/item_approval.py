@@ -185,6 +185,30 @@ def item_approval_approve(id):
         flash('Item might be deleted', category='error')
         return redirect(url_for('item_approval.item_approval'))
 
+@approval.route('/item_disapproval_approve/<id>', methods=['GET', 'POST'])
+@login_required
+def item_disapproval_approve(id):
+    item_id = id
+    item = Item.query.get(item_id)
+    item_approval = ItemApproval.query.filter_by(item_id=item_id).first()
+
+    if item:
+        db.session.delete(item)
+        db.session.commit()
+
+        db.session.delete(item_approval)
+        db.session.commit()
+
+        log = Log(severity='Permission', description=current_user.name+' disapproved item creation', user_id=current_user.id)
+        db.session.add(log)
+        db.session.commit()
+
+        flash('Item creation disapproved!', category='success')
+        return redirect(url_for('item_approval.item_approval'))
+    else:
+        flash('Item might be deleted', category='error')
+        return redirect(url_for('item_approval.item_approval'))
+
 @approval.route('/delete_approval')
 @login_required
 def delete_approval():
