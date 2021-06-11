@@ -6,6 +6,11 @@ from sqlalchemy import desc, asc, func
 
 report_generation = Blueprint('report_generation', __name__)
 
+@report_generation.route('/report_gen')
+@login_required
+def report_gen():
+    return render_template("report_generation.html")
+
 @report_generation.route('/generate_dept')
 @login_required
 def generate_by_dept():
