@@ -10,5 +10,11 @@ report_generation = Blueprint('report_generation', __name__)
 @login_required
 def generate_by_dept():
     depts = Department.query.all()
-    items = Item.query.all()
+    items = Item.query.filter_by(isApprove=1).order_by(desc(Item.created_at)).all()
     return render_template("generate_dept.html", items=items, depts=depts)
+
+@report_generation.route('/generate_status')
+@login_required
+def generate_status():
+    items = Item.query.filter_by(isApprove=1).order_by(desc(Item.created_at)).all()
+    return render_template("generate_status.html", items=items)
