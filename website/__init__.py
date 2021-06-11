@@ -26,6 +26,7 @@ def create_app():
     from .auth import auth, images
     from .item_approval import approval, images
     from .management import management
+    from .report_generation import report_generation
 
     configure_uploads(app, images)
     cors = CORS(app)
@@ -42,6 +43,7 @@ def create_app():
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(approval, url_prefix='/')
     app.register_blueprint(management, url_prefix='/')
+    app.register_blueprint(report_generation, url_prefix='/')
 
     cors.init_app(inventory, resources={r"/*": {"origins": "*", "supports_credentials": True}})
 
