@@ -151,20 +151,26 @@ def edit_item(itemid):
     if request.method == 'POST':
         if item:
             item_approval = ItemApproval.query.filter_by(item_id=item_id).first()
-            item_approval.name = name
-            item_approval.model = model
-            item_approval.brand = brand
-            item_approval.serial_number = serial_number
-            item_approval.category = category
-            item_approval.item_type = item_type
-            item_approval.department = department
-            item_approval.remarks = remarks
-            item_approval.status = status
-            item_approval.pr_number = pr_number
-            item_approval.action = "edit"
-            item_approval.isApprove = 0
-            item_approval.updated_at = func.now()
-            db.session.commit()
+
+            if item_approval:
+                item_approval.name = name
+                item_approval.model = model
+                item_approval.brand = brand
+                item_approval.serial_number = serial_number
+                item_approval.category = category
+                item_approval.item_type = item_type
+                item_approval.department = department
+                item_approval.remarks = remarks
+                item_approval.status = status
+                item_approval.pr_number = pr_number
+                item_approval.action = "edit"
+                item_approval.isApprove = 0
+                item_approval.updated_at = func.now()
+                db.session.commit()
+            else:
+                itemApprovalNew = ItemApproval(name=name, model=model, brand=brand, serial_number=serial_number, category=category, item_type=item_type, department=department, action="edit", remarks=remarks, status=status, pr_number=pr_number, user_id=current_user.id, item_id=item_id)
+                db.session.add(itemApprovalNew)
+                db.session.commit()
 
             log = Log(severity='Permission', description=current_user.name+' has requested to edit an item - '+name, user_id=current_user.id)
             db.session.add(log)
@@ -218,15 +224,22 @@ def edit_image(itemid):
     item = Item.query.get(item_id)
     form = MyForm()
     if request.method == 'POST':
-        filename = images.save(form.image.data)
         if item:
             item_approval = ItemApproval.query.filter_by(item_id=item_id).first()
-            item_approval.image = filename
-            item_approval.isApprove = 0
-            item_approval.action = "edit image"
-            db.session.commit()
+            filename = images.save(form.image.data)
+            
+            if item_approval:
+                item_approval.image = filename
+                item_approval.isApprove = 0
+                item_approval.action = "edit image"
+                item_approval.updated_at = func.now()
+                db.session.commit()
+            else:
+                itemApprovalNew = ItemApproval(image=filename, isApprove=0, action="edit image", updated_at=func.now(), user_id=current_user.id, item_id=item_id)
+                db.session.add(itemApprovalNew)
+                db.session.commit()
 
-            log = Log(severity='Permission', description=current_user.name+' has requested to edit the image of an item', user_id=current_user.id)
+            log = Log(severity='Permission', description=current_user.name+' has requested to edit the image of an item - ' + item.name, user_id=current_user.id)
             db.session.add(log)
             db.session.commit()
 

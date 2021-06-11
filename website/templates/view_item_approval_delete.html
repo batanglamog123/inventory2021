@@ -8,6 +8,7 @@
     <div class="alert bg-light">
         <p>{{ user.name }} wants to delete this item</p>
         <a href="/delete_approval?id={{ item.id }}&&a_id={{ itemApproval.id }}" class="btn btn-primary btn-sm">Approve</a>
+        <a href="/delete_disapproval?id={{ item.id }}&&a_id={{ itemApproval.id }}" class="btn btn-secondary btn-sm">Disapprove</a>
     </div>
 
     <div class="row">

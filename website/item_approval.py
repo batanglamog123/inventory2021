@@ -151,7 +151,7 @@ def disapprove_edit():
     item_approval = ItemApproval.query.get(approvalId)
 
     if item:
-        db.session.delete(item_approval)
+        item_approval.isApprove = 1
         db.session.commit()
 
         log = Log(severity='Permission', description=current_user.name+' disapproved item update - ' + item.name, user_id=current_user.id)
@@ -258,6 +258,21 @@ def delete_approval():
     flash('Item deletion approved! Item was deleted.', category='success')
     return redirect(url_for('item_approval.item_approval'))
 
+@approval.route('/delete_disapproval')
+@login_required
+def delete_disapproval():
+    itemId = request.args.get('id')
+    approvalId = request.args.get('a_id')
+
+    item = Item.query.get(itemId)
+    item_approval = ItemApproval.query.get(approvalId)
+
+    item_approval.isApprove = 1
+    db.session.commit()
+
+    flash('Item deletion was disapproved! Item was not deleted.', category='success')
+    return redirect(url_for('item_approval.item_approval'))
+
 @approval.route('/image_approval')
 @login_required
 def image_approval():
@@ -284,7 +299,30 @@ def image_approval():
         db.session.add(log)
         db.session.commit()
 
-        flash("Item updates approved!", category='success')
+        flash("Item image update was approved!", category='success')
+        return redirect(url_for('item_approval.item_approval'))
+    else :
+        flash("Item might be deleted", category='error')
+        return redirect(url_for('item_approval.item_approval'))
+
+@approval.route('/image_disapproval')
+@login_required
+def image_disapproval():
+    itemId = request.args.get('id')
+    approvalId = request.args.get('a_id')
+
+    item = Item.query.get(itemId)
+    item_approval = ItemApproval.query.get(approvalId)
+
+    if item:
+        item_approval.isApprove = 1
+        db.session.commit()
+
+        log = Log(severity='Permission', description=current_user.name+' disapproved item image update - ' + item.name, user_id=current_user.id)
+        db.session.add(log)
+        db.session.commit()
+
+        flash("Item image update was disapproved!", category='success')
         return redirect(url_for('item_approval.item_approval'))
     else :
         flash("Item might be deleted", category='error')
