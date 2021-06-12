@@ -292,3 +292,30 @@ def admin_notif_count():
 def item_notification():
     notifs = ItemNotification.query.order_by(desc(ItemNotification.date)).all()
     return render_template("item_notification.html", notifs=notifs)
+
+@inventory.route('/count_notif')
+def count_notif():
+    count = ItemNotification.query.filter_by(read=0).count()
+    return make_response(jsonify(count), 200)
+
+@inventory.route('/view_notif')
+@login_required
+def view_notif():
+    notif_id = request.args.get('notif_id')
+    item_id = request.args.get('item_id')
+
+    notif = ItemNotification.query.get(notif_id)
+    if notif:
+        notif.read = 1
+        db.session.commit()
+        
+        item = Item.query.get(item_id)
+
+        if item:
+            specs = Spec.query.filter_by(item_id=item_id).first()
+            operator = Operator.query.filter_by(item_id=item_id).first()
+            return render_template("view_item.html", item=item, specs=specs, operator=operator)
+        else:
+            flash('Item might be deleted', category='error')
+            return redirect(url_for('inventory.item_notification'))
+

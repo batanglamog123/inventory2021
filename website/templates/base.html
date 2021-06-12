@@ -98,7 +98,7 @@
 
                 <a class="btn text-light" href="/item_notification">
                   <i class="fa fa-bell" aria-hidden="true"></i>
-                  <span class="badge bg-secondary" id="notifCount"></span>
+                  <span class="badge bg-secondary" id="notifCount" style="display: none;"></span>
                 </a>
               
             </div>
@@ -246,28 +246,28 @@
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}" integrity="sha384-lpyLfhYuitXl2zRZ5Bn2fqnhNAKOAaM/0Kr9laMspuaMiZfGmfwRNFh8HlMy49eQ" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-        function notifCount() {
-        const countTxt = document.getElementById('adminNotifCount');
-          setInterval(function() {
-            fetch('http://127.0.0.1:5000/admin_notif_count').then(function(response) {
-                return response.json();
-            }).then(function(data) {
-                if (data == 0) {
-                  countTxt.style.display = 'none'
-                } else {
-                  countTxt.style.display = 'inline'
-                  countTxt.textContent = data
-                }
-            }).catch(function(error) {
-                console.log(error);
-            })
-          }, 1000);
-        }
+      //   function notifCount() {
+      //   const countTxt = document.getElementById('adminNotifCount');
+      //     setInterval(function() {
+      //       fetch('http://127.0.0.1:5000/admin_notif_count').then(function(response) {
+      //           return response.json();
+      //       }).then(function(data) {
+      //           if (data == 0) {
+      //             countTxt.style.display = 'none'
+      //           } else {
+      //             countTxt.style.display = 'inline'
+      //             countTxt.textContent = data
+      //           }
+      //       }).catch(function(error) {
+      //           console.log(error);
+      //       })
+      //     }, 1000);
+      //   }
 
-        document.addEventListener('DOMContentLoaded', function() {
-          notifCount();
-      });
-
+      //   document.addEventListener('DOMContentLoaded', function() {
+      //     notifCount();
+      // });
+////////////////////////////////////////////////////////////////
       // fetch('http://127.0.0.1:5000/admin_notif_count')
       // .then(response => response.json())
       // .then(data => console.log(data));
@@ -307,5 +307,29 @@
         event.preventDefault();
       });
     </script> -->
+
+    <script>
+      function userNotifCount() {
+      const count = document.getElementById('notifCount');
+        setInterval(function() {
+          fetch('http://127.0.0.1:5000/count_notif').then(function(response) {
+              return response.json();
+          }).then(function(data) {
+              if (data == 0) {
+                count.style.display = 'none'
+              } else {
+                count.style.display = 'inline'
+                count.textContent = data
+              }
+          }).catch(function(error) {
+              console.log(error);
+          })
+        }, 1000);
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+          userNotifCount();
+      });
+    </script>
 </body>
 </html>

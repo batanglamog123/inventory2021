@@ -27,9 +27,14 @@
     <ul class="list-group">
         {% for notif in notifs %}
             <li class="list-group-item">
-                <a href="/view_item/{{ notif.item_id }}" style="text-decoration: none;">{{ notif.content }}</a>
+                <!-- <a href="/view_item/{{ notif.item_id }}" style="text-decoration: none;">{{ notif.content }}</a> -->
+                <a href="/view_notif?notif_id={{ notif.id }}&&item_id={{ notif.item_id }}" style="text-decoration: none;">{{ notif.content }}</a>
                 <br>
                 <small class="text-muted small">{{ notif.date }}</small>
+                &nbsp;&nbsp;
+                {% if notif.read == 0 %}
+                    <small class="text-muted small">Unread</small>
+                {% endif %}
             </li>
         {% endfor %}
     </ul>
